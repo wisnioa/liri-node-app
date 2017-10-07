@@ -27,27 +27,66 @@ else {
 function runTwitter(){
  
   
-  var client = new twitter({
-    consumer_key: keys.twitterKeys.consumer_key,
-    consumer_secret: keys.twitterKeys.consumer_secret,
-    access_token_key: keys.twitterKeys.access_token_key,
-    access_token_secret: keys.twitterKeys.access_token_secret, 
-  });
+  var client = new twitter(keys);
 
-  var tweets = data[i];
-  var params = {screen_name: 'mandawisniowski'};
+  var params = {screen_name: 'mandawisniowski',  count: 20 };
   client.get('statuses/user_timeline', params, function(error, tweets, response) {
     if (!error) {
-      console.log(tweets);
-      console.log(response);
-  
-       for (var i = 0; i < 5; i++) {
-              console.log(tweets[i]);
-          }
+     
+  for (var i = 0; i < tweets.length; i++) {
+    var date = tweets[i].created_at;
+      
+      console.log("@mandawisniowski: " +  tweets[i].text + "created at:" + date)
+       }     
+
     }
     else{
       console.log(error);
     }
   });
+
+}
+
+function runSpotify(){
+
+var spotifyApi = new SpotifyWebApi(keys);
+
+spotifyApi.searchTracks(nodeArg, function(err, data) {
+  if (err) {
+    console.error('Something went wrong', err.message);
+    return;
+  }
+
+  // Print some information about the results
+  console.log('I got ' + data.body.tracks.total + ' results!');
+
+  // Go through the first page of results
+  var firstPage = data.body.tracks.items;
+  console.log('The tracks in the first page are.. (popularity in parentheses)');
+
+  /*
+   * 0: All of Me (97)
+   * 1: My Love (91)
+   * 2: I Love This Life (78)
+   * ...
+   */
+  firstPage.forEach(function(track, index) {
+    console.log(index + ': ' + track.name + ' (' + track.popularity + ')');
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
